@@ -5,10 +5,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,13 +28,37 @@ public class ProduitController {
 	@Autowired
 	ProduitService produitService;
 	
-	@RequestMapping("/showCreate")
+	/*@RequestMapping("/showCreate")
 	public String showCreate()
 	{
 		return "createProduit";
 	}
 	
-	@RequestMapping("/saveProduit")
+	@RequestMapping("/showCreate")
+	public String showCreate(ModelMap modelMap)
+	{
+		modelMap.addAttribute("produit", new Produit());
+		return "createProduit";
+	}*/
+	
+	/*@RequestMapping("/showCreate")
+	public String showCreate(ModelMap modelMap)
+	{
+		modelMap.addAttribute("produit", new Produit());
+		return "formProduit";
+	}*/
+	
+	@RequestMapping("/showCreate")
+	public String showCreate(ModelMap modelMap)
+	{
+		modelMap.addAttribute("produit", new Produit());
+		modelMap.addAttribute("mode", "new");
+		return "formProduit";
+	}
+	
+	
+	
+	/*@RequestMapping("/saveProduit")
 	public String saveProduit(@ModelAttribute("produit") Produit produit, 
 	 @RequestParam("date") String date,
 	 ModelMap modelMap) throws
@@ -46,6 +73,35 @@ public class ProduitController {
 		 String msg ="produit enregistré avec Id "+saveProduit.getIdProduit();
 		 modelMap.addAttribute("msg", msg);
 		 return "createProduit";
+	}*/
+	
+	/*@RequestMapping("/saveProduit")
+	public String saveProduit(@ModelAttribute("produit") Produit produit)
+	{
+		produitService.saveProduit(produit);
+		return "createProduit";
+	}*/
+	
+	/*@RequestMapping("/saveProduit")
+	public String saveProduit(@Valid Produit produit, BindingResult bindingResult)
+	{
+		if (bindingResult.hasErrors()) {
+			return "createProduit";
+		}
+		produitService.saveProduit(produit);
+		return "createProduit";
+	}*/
+	
+	@RequestMapping("/saveProduit")
+	public String saveProduit(@Valid Produit produit,
+	BindingResult bindingResult)
+	{
+		if (bindingResult.hasErrors()) {
+			return "formProduit";
+		}
+		
+		produitService.saveProduit(produit);
+		return "formProduit";
 	}
 	
 	/*
@@ -89,12 +145,21 @@ public class ProduitController {
 		return "listeProduits";
 	}
 	
-	@RequestMapping("/modifierProduit")
+	/*@RequestMapping("/modifierProduit")
 	public String editerProduit(@RequestParam("id") Long id,ModelMap modelMap)
 	{
 		Produit p= produitService.getProduit(id);
 		modelMap.addAttribute("produit", p);
 		return "editerProduit";
+	}*/
+	
+	@RequestMapping("/modifierProduit")
+	public String editerProduit(@RequestParam("id") Long id,ModelMap modelMap)
+	{
+		Produit p= produitService.getProduit(id);
+		modelMap.addAttribute("produit", p);
+		modelMap.addAttribute("mode", "edit");
+		return "formProduit";
 	}
 	
 	@RequestMapping("/updateProduit")
